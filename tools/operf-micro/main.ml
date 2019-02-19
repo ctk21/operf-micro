@@ -132,6 +132,9 @@ module Arg_opt = struct
   let more_info = ref false
   let more_info_arg = ["--more", Arg.Set more_info, " print min,max and standard error infos"]
 
+  let more_yaml_info = ref false
+  let more_yaml_info_arg = ["--more-yaml", Arg.Set more_yaml_info, " print min, max and standard error info as yaml"]
+
   let standard_error = ref false
   let standard_error_arg = ["--std-error", Arg.Set standard_error, " print the standard error for each bench"]
 
@@ -353,7 +356,7 @@ let format_group_parameter ppf { Measurements.group; parameter } =
   | None -> Format.fprintf ppf "%s" group
   | Some i -> Format.fprintf ppf "%s %i" group i
 
-let do_results selected_names allocations selected_sets more_info =
+let do_results selected_names allocations selected_sets more_info more_yaml_info =
   let is_selected_set s =
     match selected_sets with
     | None -> true
@@ -384,7 +387,14 @@ let do_results selected_names allocations selected_sets more_info =
                   Measurements.GroupParamMap.iter
                     (fun group_param -> function
                        | Measurements.Simple result ->
-                         if more_info
+                         if more_yaml_info
+                         then Format.printf "@[<v 2>%a:@ mean: %.2f@ min: %.2F@ max: %.2F@ standard_error: %.2F@]@ "
+                             format_group_parameter group_param
+                             result.Measurements.mean_value
+                             (snd result.Measurements.min_value)
+                             (snd result.Measurements.max_value)
+                             result.Measurements.standard_error
+                         else if more_info
                          then Format.printf "%a: %.2f min:%.2F max:%.2F standar_error:%.2F@ "
                              format_group_parameter group_param
                              result.Measurements.mean_value
@@ -395,10 +405,22 @@ let do_results selected_names allocations selected_sets more_info =
                              format_group_parameter group_param
                              result.Measurements.mean_value
                        | Measurements.Group results ->
-                         Format.printf "@[<v 2>group %a@ "
-                           format_group_parameter group_param;
+                         (if more_yaml_info
+                         then 
+                           Format.printf "@[<v 2>group %a:@ "
+                             format_group_parameter group_param
+                         else 
+                           Format.printf "@[<v 2>group %a@ "
+                             format_group_parameter group_param);
                          List.iter (fun (fun_name, result) ->
-                           if more_info
+                           if more_yaml_info
+                           then Format.printf "@[<v 2>%s:@ mean: %.2f@ min: %.2F@ max: %.2F@ standard_error: %.2F@]@ "
+                             fun_name
+                             result.Measurements.mean_value
+                             (snd result.Measurements.min_value)
+                             (snd result.Measurements.max_value)
+                             result.Measurements.standard_error
+                           else if more_info
                            then Format.printf "%s: %.2f min:%.2F max:%.2F standar_error:%.2F@ "
                              fun_name
                              result.Measurements.mean_value
@@ -421,11 +443,12 @@ let results_subcommand () =
   let l = ref [] in
   Arg_opt.selected_sets_arg @
   Arg_opt.allocations_arg @
-  Arg_opt.more_info_arg,
+  Arg_opt.more_info_arg @
+  Arg_opt.more_yaml_info_arg,
   (fun s -> l := s :: !l),
   "[<names>]\n\
    if no name provided, list recorded results, otherwise print last results",
-  (fun () -> do_results !l !Arg_opt.allocations (Arg_opt.get_selected_sets ()) !Arg_opt.more_info)
+  (fun () -> do_results !l !Arg_opt.allocations (Arg_opt.get_selected_sets ()) !Arg_opt.more_info !Arg_opt.more_yaml_info)
 
 let load_all_results selected_run =
   let aux map v =
@@ -735,7 +758,7 @@ let doall_subcommand () =
     Utils.unlock ();
     do_run output_dir rc;
     Utils.unlock ();
-    do_results [name] !Arg_opt.allocations selected_sets !Arg_opt.more_info
+    do_results [name] !Arg_opt.allocations selected_sets !Arg_opt.more_info !Arg_opt.more_yaml_info
   in
   let args = ref [] in
   Arg_opt.bin_dir_arg @
@@ -745,6 +768,7 @@ let doall_subcommand () =
   Arg_opt.output_dir_arg @
   Arg_opt.selected_sets_arg @
   Arg_opt.more_info_arg @
+  Arg_opt.more_yaml_info_arg @
   Arg_opt.allocations_arg @
   Arg_opt.without_defualt_bench_arg @
   compiler_arg_opt,
