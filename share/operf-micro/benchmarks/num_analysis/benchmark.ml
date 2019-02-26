@@ -9,7 +9,6 @@ let functions =
                                        Dka_result.check, Longer);
     "durand-kerner-aberth", Int (Durand_kerner_aberth.main, prepare, 
                                  do_not_check, [ Range (90, 110), Longer ]);
-    "k-means", Unit (K_means.main, (fun _ -> Ok), Longer);
     "fft-test", Unit ((fun () -> Fft.main (32 * 32)), Fft_result.check,
                       Long);
     "fft", Int (Fft.main, prepare, do_not_check,

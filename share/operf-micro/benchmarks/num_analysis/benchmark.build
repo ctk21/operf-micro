@@ -2,8 +2,6 @@
 	  "durand_kerner_aberth.ml", 
 	  "fft_result.ml",
   	  "fft.ml",
-	  "k_means_ds.ml",
-	  "k_means.ml",
 	  "levinson_durbin_ds.ml",
 	  "levinson_durbin_result.ml",
 	  "levinson_durbin.ml",
