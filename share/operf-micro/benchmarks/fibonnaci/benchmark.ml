@@ -20,7 +20,7 @@ let check i n =
 
 let functions =
   [ "fib", Int (run, prepare, check,
-                [ Range (0, 28), Short;
+                [ Range (10, 28), Short;
                   Range (29, 40), Long;
                   Range (40, Array.length results - 1), Longer ])
   ]

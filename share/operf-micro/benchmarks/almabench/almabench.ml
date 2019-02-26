@@ -350,7 +350,7 @@ let check_1 _ result =
 
 let functions =
   [ "bench", Int (run, (fun i -> i), check_1,
-                  [ Range (20, 100), Short ])
+                  [ Range (4, 100), Short ])
   ]
 
 let () = add functions

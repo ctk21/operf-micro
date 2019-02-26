@@ -47,9 +47,7 @@ let sieve max =
 open Micro_bench_types
 
 let range =
-  [ Range (10, 100_000), Short ]
-
-let n = 50_000
+  [ Range (25, 100_000), Short ]
 
 let do_not_check _ (_:int list) = Ok
 
@@ -70,8 +68,12 @@ let prepare i = i
 let run i = sieve i
 
 let functions =
-  [ "Eratosthene", Int (run, prepare, do_not_check, range);
-    "Eratosthene_test", Unit ((fun () -> run n), check, Short); ]
+  [ "Eratosthene", Int (run, prepare, do_not_check, range); ]
+
+(* don't run the test in a benchmarking run *)
+let n = 50_000
+let unused_functions =
+  [ "Eratosthene_test", Unit ((fun () -> run n), check, Short); ]
 
 let () = add functions
 

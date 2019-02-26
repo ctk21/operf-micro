@@ -58,7 +58,7 @@ let bench_map_fold =
     ["sequence", map_fold; "baseline", map_fold_base],
     id,
     same_as map_fold_base,
-    [M.Range (10, 100), M.Short
+    [M.Range (20, 100), M.Short
     ;M.Range (100_000, 1_000_000), M.Short]
 )
 
@@ -67,7 +67,7 @@ let bench_flat_map_fold =
   ["sequence", flat_map_fold; "baseline", flat_map_fold_base],
   id,
   same_as flat_map_fold_base,
-  [M.Range (10, 100), M.Short
+  [M.Range (20, 100), M.Short
   ;M.Range (100_000, 1_000_000), M.Short]
 )
 

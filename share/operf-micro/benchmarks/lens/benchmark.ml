@@ -58,8 +58,7 @@ let range = [ Any, Short ]
 
 let rect_area_group =
   Int_group
-    (["lens", lens_rect_area;
-      "baseline", direct_rect_area],
+    (["lens", lens_rect_area],
      prepare,
      check_rect_area,
      range)
