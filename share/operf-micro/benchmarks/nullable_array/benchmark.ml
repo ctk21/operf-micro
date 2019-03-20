@@ -180,10 +180,10 @@ let walk density =
     ],
        prepare_walk density,
        check_walk density,
-       [Range (100, 100000), Short])
+       [Range (1024, 100000), Short])
 
 let functions =
-  let densities = [1.; 0.3; 0.01] in
+  let densities = [0.7; 0.3] in
   List.map sum densities @
   List.map walk densities
 

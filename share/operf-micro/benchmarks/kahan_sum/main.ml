@@ -24,7 +24,7 @@ let check n r =
              r expected)
 
 let interval_range =
-  [ Range (0, 100_000), Short;
+  [ Range (10_000, 100_000), Short;
     Range (100_000, 1_000_000), Long;
     Range (10_000_000, 100_000_000), Longer ]
 

@@ -139,7 +139,7 @@ let n = 20_000
 
 let functions =
   [ "hamming var", Int (run, prepare, check_i, range);
-    "hamming_test", Unit ((fun () -> run n), check, Short) ]
+    "hamming_test", Unit ((fun () -> run n), check, Long) ]
 
 let () = add functions
 
